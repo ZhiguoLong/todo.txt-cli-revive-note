@@ -125,7 +125,7 @@ revivearchivenote(){
         if [ $CHANGED = true ]
         then
                 sed -i.bak $linetodo" s/ note\:[[:alnum:]_]\{1,\}\.txt/ note:${TODO_NOTE_RESTORED}/" "$TODO_FILE"
-                echo "todo line num: " $linetodo
+                #echo "todo line num: " $linetodo
         fi
 
         # backup archive file
@@ -133,7 +133,7 @@ revivearchivenote(){
 
         # restore note file with $notename
         python ${TODO_ACTIONS_DIR}/restorenote.py "${TODO_NOTE_ARCHIVE}.bak" "$notetitle" "${TODO_NOTES_DIR}/$TODO_NOTE_RESTORED" "$TODO_NOTE_ARCHIVE"
-        echo "TODO: $linetodo note restored."
+        echo "TODO: $linetodo note restored. (${TODO_NOTE_RESTORED})"
 
 }
 #########
