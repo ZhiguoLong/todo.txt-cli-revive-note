@@ -1,9 +1,11 @@
 # Extension of revive and note add-ons for todo.txt
 This is an extension of the add-ons [revive](https://github.com/duncanje/todo.txt-revive) and [note](https://github.com/mgarrido/todo.txt-cli/tree/note/todo.actions.d) for [todo.txt-cli](https://github.com/ginatrapani/todo.txt-cli). 
 
-This extension allows one to easily re-add a completed task back to the todo.txt list, and it will restore the note (if any) associated to the task. **Also, it will remove the restored todo from the completed todos list.**
+This extension allows one to easily re-add a completed task back to the todo.txt list, and it will restore the note (if any) associated to the task. **It will also remove the restored todo from the completed todos list.**
 
 ## Install
+**Requires python.**
+
 **Be aware that this add-on overrides the `archive`, `del` and `rm` commands.** If you already have overridden some of them, you'll need to do some tweaking to combine both versions.
 
 Copy the `archive`, `del`, `rm`, `note`, `restorenote.py`, and `revive` files in this directory to your add-ons folder. The `revive` file provided here revises the original [revive](https://github.com/duncanje/todo.txt-revive). It adds the functionality to also restore note when restoring todo. 
@@ -21,6 +23,7 @@ For example:
 
 ```
 $ todo.sh revive  
+# shows a list of completed tasks
 1 x 2017-01-01 A task with out note.  
 2 x 2017-01-02 A task with a note. note:xyz.txt  
 --  
@@ -29,14 +32,17 @@ $ todo.sh ls
 --  
 TODO: 0 of 0 tasks shown 
 $ todo.sh revive 2  
+# restores completed task no. 2, where its note is automatically restored
 2 add A task with a note. note:xyz.txt  
 TODO: 2 added.  
-TODO: 2 note restored  
+TODO: 2 note restored. (xyz.txt)  
 $ todo.sh revive  
+# shows a list of completed tasks
 1 x 2017-01-01 A task with out note.  
 --  
 DONE: 1 of 1 tasks shown  
 $ todo.sh revive 1  
+# restores completed task no. 1
 1 A task with out note.  
 TODO: 1 added.  
 TODO: Task 1 has no note.  
