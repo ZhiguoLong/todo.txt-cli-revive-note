@@ -108,5 +108,6 @@ For more usage of the `note` add-on, see below or [the original project page](ht
 ># Note file extension
 >export TODO_NOTE_EXT=.md
 >```
+
 # License
 MIT and GPL
