@@ -43,12 +43,14 @@ function reviveTodo {
 	cleanTodo=$(echo "$todo" | sed -E 's/x [0-9]{4}-[0-9]{2}-[0-9]{2} //')
 	$TODO_FULL_SH add "$cleanTodo"
 
+  #echo "restoring note"
+  # restore note from notes/archive.txt
+  ${TODO_FULL_SH} note __rsnote "$1"
+  #echo "note restored"
+	
   # remove the line in done.txt
   sed -i.bak -e $1"s/^.*//" -e '/./!d' "${TODO_DIR}/done.txt"
 
-  # restore note from notes/archive.txt
-  ${TODO_FULL_SH} note __rsnote
-	
 	exit 0
 }
 

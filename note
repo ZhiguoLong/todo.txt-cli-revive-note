@@ -19,8 +19,6 @@ usage() {
     echo "      Opens in EDITOR the note related with the task on line ITEM# or the notes archive."
     echo "    $(basename $0) show|s ITEM#|archive|a"
     echo "      Shows the note related with the task on line ITEM# or the notes archive."
-    echo "    $(basename $0) revive|r"
-    echo "      Restores the note related with the task on the last line of the TODO file."
 }
 
 getnotenamefromnumber() {
@@ -106,9 +104,15 @@ constructnotename(){
 }
 
 getnotetitle(){
+    # get new title from completed list
     title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
     title=$(echo "$title" | sed -e "s/ note\:[[:alnum:]_]\{1,\}\.txt//")
-    notetitle=$(echo \# $title)
+    newnotetitle=$(echo \# $title)
+    # get old title from completed list
+    getTodo "$1" "$TODO_DIR/done.txt"
+    title=$(echo "$todo" | sed -e "s/^\(x ....-..-.. \)\?//" -e "s/^(.) \?//")
+    title=$(echo "$title" | sed -e "s/ note\:[[:alnum:]_]\{1,\}\.txt//")
+    oldnotetitle=$(echo \# $title)
 }
 
 revivearchivenote(){
@@ -119,21 +123,23 @@ revivearchivenote(){
         # construct note name, given ITEM#
         constructnotename "$linetodo"
 
-        getnotetitle
+        getnotetitle "$1"
 
         # replace note name in todo if changed
         if [ $CHANGED = true ]
         then
                 sed -i.bak $linetodo" s/ note\:[[:alnum:]_]\{1,\}\.txt/ note:${TODO_NOTE_RESTORED}/" "$TODO_FILE"
-                echo "todo line num: " $linetodo
+                #echo "todo line num: " $linetodo
         fi
 
         # backup archive file
         mv "$TODO_NOTE_ARCHIVE" "${TODO_NOTE_ARCHIVE}.bak"
 
+        #echo "old title: ${oldnotetitle}"
+        #echo "new title: ${newnotetitle}"
         # restore note file with $notename
-        python ${TODO_ACTIONS_DIR}/restorenote.py "${TODO_NOTE_ARCHIVE}.bak" "$notetitle" "${TODO_NOTES_DIR}/$TODO_NOTE_RESTORED" "$TODO_NOTE_ARCHIVE"
-        echo "TODO: $linetodo note restored."
+        python ${TODO_ACTIONS_DIR}/restorenote.py "${TODO_NOTE_ARCHIVE}.bak" "$oldnotetitle" "$newnotetitle" "${TODO_NOTES_DIR}/$TODO_NOTE_RESTORED" "$TODO_NOTE_ARCHIVE"
+        echo "TODO: $linetodo note restored. (${TODO_NOTE_RESTORED})"
 
 }
 #########
@@ -209,7 +215,7 @@ case "$TODO_NOTE_ACTION" in
     ;;
 
 "revive" | "r" | "__rsnote")
-    revivearchivenote
+    revivearchivenote "$1"
     ;;
 
 *)
